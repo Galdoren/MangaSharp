@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MangaSharp", "MangaSharp\MangaSharp.csproj", "{46EAF5CD-CF68-4B24-BA27-47211EA6DC6D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{B9BFC5F3-4350-4BFC-9C59-9BBDC84B7754}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manga.Core", "Libraries\Manga.Core\Manga.Core.csproj", "{94B50B08-10BC-49F5-9442-73A34803D785}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manga.Data", "Libraries\Manga.Data\Manga.Data.csproj", "{D9B6EF00-0B58-4803-9CFE-0B798C0C0874}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manga.Model", "Libraries\Manga.Model\Manga.Model.csproj", "{709EDFAB-AABF-4D1D-8A4C-CEA77157203E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manga.Services", "Libraries\Manga.Services\Manga.Services.csproj", "{1154DBAA-4657-4B86-B300-8A38C07F6315}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{2671C395-C7F2-4EE7-9F02-69E53CA02424}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manga.Plugin.Publishers.Mangafox", "Plugins\Manga.Plugin.Publishers.Mangafox\Manga.Plugin.Publishers.Mangafox.csproj", "{99EFE60E-3209-4D78-A56C-20B02CB99F85}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{46EAF5CD-CF68-4B24-BA27-47211EA6DC6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46EAF5CD-CF68-4B24-BA27-47211EA6DC6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46EAF5CD-CF68-4B24-BA27-47211EA6DC6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46EAF5CD-CF68-4B24-BA27-47211EA6DC6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94B50B08-10BC-49F5-9442-73A34803D785}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94B50B08-10BC-49F5-9442-73A34803D785}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94B50B08-10BC-49F5-9442-73A34803D785}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94B50B08-10BC-49F5-9442-73A34803D785}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9B6EF00-0B58-4803-9CFE-0B798C0C0874}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9B6EF00-0B58-4803-9CFE-0B798C0C0874}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9B6EF00-0B58-4803-9CFE-0B798C0C0874}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9B6EF00-0B58-4803-9CFE-0B798C0C0874}.Release|Any CPU.Build.0 = Release|Any CPU
+		{709EDFAB-AABF-4D1D-8A4C-CEA77157203E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{709EDFAB-AABF-4D1D-8A4C-CEA77157203E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{709EDFAB-AABF-4D1D-8A4C-CEA77157203E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{709EDFAB-AABF-4D1D-8A4C-CEA77157203E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1154DBAA-4657-4B86-B300-8A38C07F6315}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1154DBAA-4657-4B86-B300-8A38C07F6315}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1154DBAA-4657-4B86-B300-8A38C07F6315}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1154DBAA-4657-4B86-B300-8A38C07F6315}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99EFE60E-3209-4D78-A56C-20B02CB99F85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99EFE60E-3209-4D78-A56C-20B02CB99F85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99EFE60E-3209-4D78-A56C-20B02CB99F85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99EFE60E-3209-4D78-A56C-20B02CB99F85}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{94B50B08-10BC-49F5-9442-73A34803D785} = {B9BFC5F3-4350-4BFC-9C59-9BBDC84B7754}
+		{D9B6EF00-0B58-4803-9CFE-0B798C0C0874} = {B9BFC5F3-4350-4BFC-9C59-9BBDC84B7754}
+		{709EDFAB-AABF-4D1D-8A4C-CEA77157203E} = {B9BFC5F3-4350-4BFC-9C59-9BBDC84B7754}
+		{1154DBAA-4657-4B86-B300-8A38C07F6315} = {B9BFC5F3-4350-4BFC-9C59-9BBDC84B7754}
+		{99EFE60E-3209-4D78-A56C-20B02CB99F85} = {2671C395-C7F2-4EE7-9F02-69E53CA02424}
+	EndGlobalSection
+EndGlobal

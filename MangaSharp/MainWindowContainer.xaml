@@ -1,0 +1,39 @@
+﻿<metro:MetroWindow x:Class="MangaSharp.MainWindowContainer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:cal="http://www.caliburnproject.org"
+        TitleCaps="False"
+        ShowTitleBar="False"
+        ResizeMode="CanResizeWithGrip"
+        cal:Message.Attach="[Event SizeChanged] = [Action WindowSizeChanged($view, $eventArgs)]"
+        Title="MainWindowContainer" Height="550" Width="545" MinHeight="550" MinWidth="545">
+    <metro:MetroWindow.GlowBrush>
+        <SolidColorBrush Color="{DynamicResource AccentColor}" />
+    </metro:MetroWindow.GlowBrush>
+    <metro:MetroWindow.WindowCommands>
+        <metro:WindowCommands>
+            <Button cal:Message.Attach="ToggleSettings" ToolTip="Settings" IsTabStop="False">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </StackPanel>
+            </Button>
+        </metro:WindowCommands>
+    </metro:MetroWindow.WindowCommands>
+    <metro:MetroWindow.Flyouts>
+        <metro:FlyoutsControl>
+            <metro:Flyout Header="Settings" Theme="Accent" Position="Right" IsOpen="{Binding IsSettingsOpen}" Width="450">
+                <StackPanel>
+                    <TextBlock Text="Hello Settings!" />
+                </StackPanel>
+            </metro:Flyout>
+        </metro:FlyoutsControl>
+    </metro:MetroWindow.Flyouts>
+    <Grid>
+        
+    </Grid>
+</metro:MetroWindow>

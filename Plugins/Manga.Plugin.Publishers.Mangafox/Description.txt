@@ -1,0 +1,8 @@
+﻿Group: Publisher
+FriendlyName: Mangafox
+SystemName: Publishers.Mangafox
+Version: 1.00
+SupportedVersions: 1.00
+Author: Selim Ozyalcin
+DisplayOrder: 1
+FileName: Manga.Plugin.Publishers.Mangafox.dll

@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="MangaSharp.Views.DownloadView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0">
+            <Button x:Name="AddJob" Content="Add Job" HorizontalAlignment="Left" 
+                Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Height="30"/>
+            
+            
+        </Grid>        
+
+        <ListBox x:Name="Items" Grid.Row="1" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Background="Transparent">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Text="{Binding Title}" Grid.Row="0" Grid.Column="0" TextAlignment="Left" />
+                        <TextBlock HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" >
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="Chapter Progress: {0}">
+                                    <Binding Path="StatusText" UpdateSourceTrigger="PropertyChanged" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <ProgressBar Value="{Binding Progress}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>
