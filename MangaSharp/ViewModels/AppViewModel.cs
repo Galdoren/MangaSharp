@@ -1,12 +1,9 @@
-﻿using Autofac.Extras.Attributed;
+﻿using Autofac.Features.AttributeFilters;
 using Caliburn.Micro;
 using Manga.Core.Domain.Logging;
-using Manga.Core.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MangaSharp.ViewModels
 {
@@ -24,7 +21,7 @@ namespace MangaSharp.ViewModels
 
         #region Ctor
 
-        public AppViewModel(IEventAggregator eventAggregator, [WithMetadata("Location", "Main Window")]IEnumerable<IViewModel> tabs)
+        public AppViewModel(IEventAggregator eventAggregator, [MetadataFilter("Location", "Main Window")]IEnumerable<IViewModel> tabs)
         {
             this._eventAggregator = eventAggregator;            
             this.Items.AddRange(tabs.OrderBy(t => t.Order));

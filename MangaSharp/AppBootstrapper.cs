@@ -13,8 +13,9 @@ using Autofac;
 using System.Reflection;
 using Autofac.Core;
 using Autofac.Features.Metadata;
-using Autofac.Extras.Attributed;
+using Autofac.Extras.AttributeMetadata;
 using MangaSharp.Infrastructure;
+using Autofac.Features.AttributeFilters;
 
 namespace MangaSharp
 {
@@ -52,7 +53,7 @@ namespace MangaSharp
                 //  registered as view model
               .As<IViewModel>()
                 //  allow metadata filter
-              .WithAttributeFilter()
+              .WithAttributeFiltering()
                 //  always create a new one
               .InstancePerDependency();
 
@@ -105,14 +106,14 @@ namespace MangaSharp
             builder.RegisterType<MangaViewModel>()
                 // register as self
                 .AsSelf()
-                .WithAttributeFilter()
+                .WithAttributeFiltering()
                 .InstancePerDependency();
             
             // register AppViewModel
             builder.RegisterType<AppViewModel>()
                 // register as self
                 .AsSelf()
-                .WithAttributeFilter()
+                .WithAttributeFiltering()
                 // singleton
                 .SingleInstance();
             

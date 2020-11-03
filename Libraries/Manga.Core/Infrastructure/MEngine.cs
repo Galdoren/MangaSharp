@@ -44,7 +44,7 @@ namespace Manga.Core.Infrastructure
         protected virtual void RegisterDependencies(MConfig config)
         {
             var builder = new ContainerBuilder();
-            var container = builder.Build();
+            //var container = builder.Build();
 
             //we create new instance of ContainerBuilder
             //because Build() or Update() method can only be called once on a ContainerBuilder.
@@ -57,10 +57,10 @@ namespace Manga.Core.Infrastructure
             builder.RegisterInstance(config).As<MConfig>().SingleInstance();
             builder.RegisterInstance(this).As<IEngine>().SingleInstance();
             builder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
-            builder.Update(container);
+            //builder.Update(container);
 
             //register dependencies provided by other assemblies
-            builder = new ContainerBuilder();
+            //builder = new ContainerBuilder();
             var drTypes = typeFinder.FindClassesOfType<IDependencyRegistrar>();
             var drInstances = new List<IDependencyRegistrar>();
             foreach (var drType in drTypes)
@@ -69,7 +69,8 @@ namespace Manga.Core.Infrastructure
             drInstances = drInstances.AsQueryable().OrderBy(t => t.Order).ToList();
             foreach (var dependencyRegistrar in drInstances)
                 dependencyRegistrar.Register(builder, typeFinder);
-            builder.Update(container);
+            //builder.Update(container);
+            var container = builder.Build();
 
             _containerManager = new ContainerManager(container);
             
