@@ -15,6 +15,12 @@ namespace Manga.Services.Publishers
         Task<IList<Manga.Core.Domain.Manga>> GetList();
 
         /// <summary>
+        /// Fetches the manga list from publisher website
+        /// </summary>
+        /// <returns></returns>
+        Task<IList<Manga.Core.Domain.Manga>> Update();
+
+        /// <summary>
         /// Fetches the manga details from publisher website
         /// </summary>
         /// <param name="manga">Manga</param>

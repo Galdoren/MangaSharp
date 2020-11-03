@@ -229,7 +229,7 @@ namespace Manga.Plugin.Publishers.Mangafox.Services
             }
         }
 
-        protected virtual async Task DownloadChapterToFolder(Core.Domain.Chapter chapter, DownloadOptions options, ChapterQueue queue)
+        protected virtual async Task DownloadChapterToFolder(Core.Domain.Chapter chapter, DownloadOptions options/*, ChapterQueue queue*/)
         {
             //options.Progress.Text = String.Format("Downloading {0}", chapter.Name);
             // Create directory path
@@ -318,11 +318,19 @@ namespace Manga.Plugin.Publishers.Mangafox.Services
 
         #region Methods
 
+        public async Task<IList<Core.Domain.Manga>> GetList()
+        {
+            Console.Write("Mangafox GetList");
+            var publisher = _publisherService.GetPublisherByName("Mangafox");
+            IList<Manga.Core.Domain.Manga> list = _mangaService.GetAllManga(publisher.Id);
+            return list;
+        }
+
         /// <summary>
         /// Get the list from mangafox directory
         /// </summary>
         /// <returns></returns>
-        public async Task<IList<Core.Domain.Manga>> GetList()
+        public async Task<IList<Core.Domain.Manga>> Update()
         {
             Console.WriteLine("Mangafox GetList");
             IList<Manga.Core.Domain.Manga> list_db = new List<Manga.Core.Domain.Manga>();

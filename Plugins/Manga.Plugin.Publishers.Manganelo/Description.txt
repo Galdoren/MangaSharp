@@ -1,0 +1,8 @@
+﻿Group: Publisher
+FriendlyName: Manganelo
+SystemName: Publishers.Manganelo
+Version: 1.00
+SupportedVersions: 1.00
+Author: Selim Ozyalcin
+DisplayOrder: 1
+FileName: Manga.Plugin.Publishers.Manganelo.dll

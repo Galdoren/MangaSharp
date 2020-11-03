@@ -24,6 +24,19 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
+        <Button ToolTip="Refresh Library"
+                cal:Message.Attach="RefreshList"
+                Grid.Row="0" Width="42" Height="42" VerticalAlignment="Top" HorizontalAlignment="Left" 
+                Margin="120,6,0,0" Style="{DynamicResource MetroCircleButtonStyle}">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Width="16" Height="16">
+                    <Rectangle.Fill>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_refresh}" />
+                    </Rectangle.Fill>
+                </Rectangle>
+            </StackPanel>
+        </Button>
+
         <TextBox Grid.Row="0" Width="210" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,15,0,0"
                  Name="searchBox" metro:TextboxHelper.ClearTextButton="True" metro:TextboxHelper.Watermark="Search.."
                  Text="{Binding SearchText, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" >

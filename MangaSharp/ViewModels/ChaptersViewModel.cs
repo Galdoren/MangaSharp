@@ -94,7 +94,7 @@ namespace MangaSharp.ViewModels
                 Progress = 0.0d,
                 Status = DownloadStatus.Created,
                 StatusText = "Waiting...",
-                Title = String.Format("Job #{0}", j + 1)
+                //Title = String.Format("Job #{0}", j + 1)
             };
 
             

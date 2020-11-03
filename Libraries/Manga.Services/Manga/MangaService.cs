@@ -75,8 +75,8 @@ namespace Manga.Services.Mangas
                 {
                     using (var command = _dataProvider.GetCommand())
                     {
-                        String sql = @"INSERT INTO [Manga] ([Name], [Url], [PublisherId], [Status], [Year], [IsFavourite], [Size], [CreatedDate], [LastUpdatedDate]) 
-                                        VALUES (@name, @url, @publisherId, @status, @year, @favourite, @size, @createdAt, @updatedAt);";
+                        String sql = @"INSERT INTO [Manga] ([Name], [Url], [PublisherId], [Status], [Year], [IsFavourite], [Size], [ImageUrl], [CreatedDate], [LastUpdatedDate]) 
+                                        VALUES (@name, @url, @publisherId, @status, @year, @favourite, @size, @imageUrl, @createdAt, @updatedAt);";
 
                         command.Transaction = transaction.UnderlyingTransaction;
                         command.Connection = transaction.UnderlyingTransaction.Connection;
@@ -111,6 +111,10 @@ namespace Manga.Services.Mangas
                         pSize.ParameterName = "size";
                         pSize.DbType = System.Data.DbType.Int32;
 
+                        var pImageUrl = _dataProvider.GetParameter();
+                        pImageUrl.ParameterName = "imageUrl";
+                        pImageUrl.DbType = System.Data.DbType.String;
+
                         var pCreatedDate = _dataProvider.GetParameter();
                         pCreatedDate.ParameterName = "createdAt";
                         pCreatedDate.DbType = System.Data.DbType.DateTime;
@@ -126,6 +130,7 @@ namespace Manga.Services.Mangas
                         command.Parameters.Add(pIsFavourite);
                         command.Parameters.Add(pSize);
                         command.Parameters.Add(pStatus);
+                        command.Parameters.Add(pImageUrl);
                         command.Parameters.Add(pCreatedDate);
                         command.Parameters.Add(pUpdatedDate);
 
@@ -138,6 +143,7 @@ namespace Manga.Services.Mangas
                             pIsFavourite.Value = list[i].IsFavourite;
                             pSize.Value = list[i].Size;
                             pStatus.Value = list[i].Status;
+                            pImageUrl.Value = list[i].ImageUrl;
                             pCreatedDate.Value = list[i].CreatedDate;
                             pUpdatedDate.Value = list[i].LastUpdatedDate;
 

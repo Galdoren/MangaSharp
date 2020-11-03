@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using Manga.Services.Mangas;
 
 namespace MangaSharp.ViewModels
 {
@@ -90,6 +91,7 @@ namespace MangaSharp.ViewModels
                     return;
                 _selectedPublisher = value;
                 PublisherChanged();
+                NotifyOfPropertyChange(() => CanRefreshList);
             }
         }
 
@@ -127,6 +129,15 @@ namespace MangaSharp.ViewModels
                 NotifyOfPropertyChange(() => SelectedManga);
             }
         }
+
+        public bool CanRefreshList
+        {
+            get
+            {
+                return _selectedPublisher != null;
+            }
+        }
+
 
         #endregion
 
@@ -179,6 +190,24 @@ namespace MangaSharp.ViewModels
             settings.WindowStartupLocation = WindowStartupLocation.Manual;
 
             _windowManager.ShowWindow(viewModel, null, settings);
+        }
+
+        public void RefreshList()
+        {
+            var window = App.Current.MainWindow as MetroWindow;
+            var controllerTask = window.ShowProgressAsync("Please Wait...", String.Format("Updating catalog for {0}", _selectedPublisher.Name));
+
+            Task.Run(async () =>
+            {
+                IPublisherWebService service = EngineContext.Current.ContainerManager.Resolve<IPublisherWebService>(_selectedPublisher.Name);
+                IList<Manga.Core.Domain.Manga> list = await service.Update();
+
+                Items.Clear();
+                Items.AddRange(list);
+                Items.Refresh();
+                var controller = await controllerTask;
+                await controller.CloseAsync();
+            });
         }
 
         #endregion

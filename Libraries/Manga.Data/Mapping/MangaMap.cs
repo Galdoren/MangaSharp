@@ -19,11 +19,11 @@ namespace Manga.Data.Mapping
 
             this.Property(m => m.PublisherId)
                 .HasColumnAnnotation(IndexAnnotation.AnnotationName,
-                new IndexAnnotation(new IndexAttribute("IX_MANGA_NAME") { IsUnique = true, IsClustered = true, Order = 1 }));
+                new IndexAnnotation(new IndexAttribute("IX_MANGA_URL") { IsUnique = true, IsClustered = true, Order = 1 }));
 
-            this.Property(m => m.Name)
+            this.Property(m => m.URL)
                 .HasColumnAnnotation(IndexAnnotation.AnnotationName,
-                new IndexAnnotation(new IndexAttribute("IX_MANGA_NAME") { IsUnique = true, IsClustered = true, Order = 2 }));            
+                new IndexAnnotation(new IndexAttribute("IX_MANGA_URL") { IsUnique = true, IsClustered = true, Order = 2 }));            
 
             
 

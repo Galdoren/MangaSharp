@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MangaSharp", "MangaSharp\MangaSharp.csproj", "{46EAF5CD-CF68-4B24-BA27-47211EA6DC6D}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{2671C395-C7F2-4EE7-9F02-69E53CA02424}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manga.Plugin.Publishers.Mangafox", "Plugins\Manga.Plugin.Publishers.Mangafox\Manga.Plugin.Publishers.Mangafox.csproj", "{99EFE60E-3209-4D78-A56C-20B02CB99F85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manga.Plugin.Publishers.Manganelo", "Plugins\Manga.Plugin.Publishers.Manganelo\Manga.Plugin.Publishers.Manganelo.csproj", "{82D137AD-9C4C-4AE7-AFBF-57473CB717D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{99EFE60E-3209-4D78-A56C-20B02CB99F85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99EFE60E-3209-4D78-A56C-20B02CB99F85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99EFE60E-3209-4D78-A56C-20B02CB99F85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82D137AD-9C4C-4AE7-AFBF-57473CB717D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82D137AD-9C4C-4AE7-AFBF-57473CB717D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82D137AD-9C4C-4AE7-AFBF-57473CB717D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82D137AD-9C4C-4AE7-AFBF-57473CB717D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,5 +65,9 @@ Global
 		{709EDFAB-AABF-4D1D-8A4C-CEA77157203E} = {B9BFC5F3-4350-4BFC-9C59-9BBDC84B7754}
 		{1154DBAA-4657-4B86-B300-8A38C07F6315} = {B9BFC5F3-4350-4BFC-9C59-9BBDC84B7754}
 		{99EFE60E-3209-4D78-A56C-20B02CB99F85} = {2671C395-C7F2-4EE7-9F02-69E53CA02424}
+		{82D137AD-9C4C-4AE7-AFBF-57473CB717D0} = {2671C395-C7F2-4EE7-9F02-69E53CA02424}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {781F2E1E-14B1-4A2F-88B4-04B7CDAD7D49}
 	EndGlobalSection
 EndGlobal
