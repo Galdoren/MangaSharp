@@ -1,11 +1,4 @@
-﻿using Caliburn.Micro;
-using Manga.Core.Infrastructure.DependencyManagement;
-using MangaSharp.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Manga.Core.Infrastructure.DependencyManagement;
 using Autofac;
 using Manga.Core.Data;
 using Manga.Data;
@@ -15,12 +8,14 @@ using Manga.Services.Publishers;
 using Manga.Core.Plugins;
 using MangaSharp.Services;
 using Manga.Services.Net;
+using Manga.Common.Interfaces;
+using Manga.Core;
 
 namespace MangaSharp.Infrastructure
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public void Register(Autofac.ContainerBuilder builder, Manga.Core.Infrastructure.ITypeFinder typeFinder)
+        public void Register(ContainerBuilder builder, Manga.Core.Infrastructure.ITypeFinder typeFinder)
         {
             //data layer
             var dataSettingsManager = new DataSettingsManager();
@@ -55,6 +50,8 @@ namespace MangaSharp.Infrastructure
 
             //download manager
             builder.RegisterType<AsyncDownloadManager>().As<IDownloadManager>().SingleInstance();
+
+            builder.RegisterType<Logger>().As<ILogger>().SingleInstance();
         }
 
         public int Order

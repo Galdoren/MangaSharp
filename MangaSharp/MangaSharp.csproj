@@ -192,6 +192,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Libraries\Manga.Common\Manga.Common.csproj">
+      <Project>{D4D47002-828D-4149-AF94-EED90F7186FF}</Project>
+      <Name>Manga.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Libraries\Manga.Core\Manga.Core.csproj">
       <Project>{94b50b08-10bc-49f5-9442-73a34803d785}</Project>
       <Name>Manga.Core</Name>

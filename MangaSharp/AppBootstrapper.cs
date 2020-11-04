@@ -1,21 +1,16 @@
 ﻿using Caliburn.Metro.Autofac;
 using Caliburn.Micro;
-using Manga.Core.Data;
 using Manga.Core.Infrastructure;
-using Manga.Core.Infrastructure.DependencyManagement;
 using MangaSharp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Autofac;
-using System.Reflection;
-using Autofac.Core;
-using Autofac.Features.Metadata;
 using Autofac.Extras.AttributeMetadata;
-using MangaSharp.Infrastructure;
 using Autofac.Features.AttributeFilters;
+using System.Windows.Threading;
+using Manga.Common.Enums;
+using Manga.Common.Interfaces;
 
 namespace MangaSharp
 {
@@ -69,9 +64,9 @@ namespace MangaSharp
               .InstancePerDependency();
 
             //  register the single window manager for this container
-            builder.Register<IWindowManager>(c => CreateWindowManager()).InstancePerLifetimeScope();
+            builder.Register(c => CreateWindowManager()).InstancePerLifetimeScope();
             //  register the single event aggregator for this container
-            builder.Register<IEventAggregator>(c => CreateEventAggregator()).InstancePerLifetimeScope();
+            builder.Register(c => CreateEventAggregator()).InstancePerLifetimeScope();
 
             
 
@@ -84,12 +79,13 @@ namespace MangaSharp
 
             builder.RegisterModule<AttributedMetadataModule>();
 
+            // TODO: Replace obsolete method
             builder.Update(EngineContext.Current.ContainerManager.Container);
             
-            this.Container = EngineContext.Current.ContainerManager.Container;
+            Container = EngineContext.Current.ContainerManager.Container;
         }
 
-        protected override void ConfigureContainer(Autofac.ContainerBuilder builder)
+        protected override void ConfigureContainer(ContainerBuilder builder)
         {
             var config = new TypeMappingConfiguration
             {
@@ -155,6 +151,11 @@ namespace MangaSharp
             return Container.Resolve(typeof(IEnumerable<>).MakeGenericType(service)) as IEnumerable<object>;
 
             //return base.GetAllInstances(service);
+        }
+
+        protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            Container.Resolve<ILogger>().Log(e.Exception.ToString(), LogLevel.Error);
         }
     }
 }
