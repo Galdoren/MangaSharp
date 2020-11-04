@@ -2,12 +2,8 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using Manga.Core.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Manga.Services.Net
 {
@@ -142,7 +138,7 @@ namespace Manga.Services.Net
         public T Dequeue()
         {
             _semaphore.WaitOne();
-            T item = default(T);
+            var item = default(T);
             if (Count > 0)
             {
                 lock (_syncRoot)
@@ -165,7 +161,7 @@ namespace Manga.Services.Net
         public bool TryDequeue(out T item)
         {
             item = default(T);
-            bool result = false;
+            var result = false;
             if(Count > 0)
             {
                 lock(_syncRoot)
@@ -197,7 +193,7 @@ namespace Manga.Services.Net
 
         public bool Contains(T item)
         {
-            bool contains = false;
+            var contains = false;
             lock(_syncRoot)
             {
                 contains = _inQueue.Contains(item) || _outQueue.Contains(item);
@@ -215,7 +211,7 @@ namespace Manga.Services.Net
                 var e = _inQueue.Concat(_outQueue).GetEnumerator();
                 e.Reset();
                 
-                for(int i = arrayIndex; i < array.Length; i++)
+                for(var i = arrayIndex; i < array.Length; i++)
                 {
                     if (!e.MoveNext())
                         break;
@@ -233,7 +229,7 @@ namespace Manga.Services.Net
                 var e = _inQueue.Concat(_outQueue).GetEnumerator();
                 e.Reset();
 
-                for (int i = index; i < array.Length; i++)
+                for (var i = index; i < array.Length; i++)
                 {
                     if (!e.MoveNext())
                         break;

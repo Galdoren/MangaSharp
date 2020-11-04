@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manga.Plugin.Publishers.Man
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manga.Plugin.Publishers.Manganelo", "Plugins\Manga.Plugin.Publishers.Manganelo\Manga.Plugin.Publishers.Manganelo.csproj", "{82D137AD-9C4C-4AE7-AFBF-57473CB717D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manga.Common", "Libraries\Manga.Common\Manga.Common.csproj", "{D4D47002-828D-4149-AF94-EED90F7186FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{82D137AD-9C4C-4AE7-AFBF-57473CB717D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82D137AD-9C4C-4AE7-AFBF-57473CB717D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82D137AD-9C4C-4AE7-AFBF-57473CB717D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4D47002-828D-4149-AF94-EED90F7186FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4D47002-828D-4149-AF94-EED90F7186FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4D47002-828D-4149-AF94-EED90F7186FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4D47002-828D-4149-AF94-EED90F7186FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +72,7 @@ Global
 		{1154DBAA-4657-4B86-B300-8A38C07F6315} = {B9BFC5F3-4350-4BFC-9C59-9BBDC84B7754}
 		{99EFE60E-3209-4D78-A56C-20B02CB99F85} = {2671C395-C7F2-4EE7-9F02-69E53CA02424}
 		{82D137AD-9C4C-4AE7-AFBF-57473CB717D0} = {2671C395-C7F2-4EE7-9F02-69E53CA02424}
+		{D4D47002-828D-4149-AF94-EED90F7186FF} = {B9BFC5F3-4350-4BFC-9C59-9BBDC84B7754}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {781F2E1E-14B1-4A2F-88B4-04B7CDAD7D49}

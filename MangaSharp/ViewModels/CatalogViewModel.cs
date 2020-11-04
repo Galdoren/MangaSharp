@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Manga.Core;
@@ -12,12 +11,9 @@ using MangaSharp.Models;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using Manga.Services.Mangas;
 
 namespace MangaSharp.ViewModels
 {
@@ -149,7 +145,7 @@ namespace MangaSharp.ViewModels
                 e.Accepted = true;
             else
             {
-                Manga.Core.Domain.Manga manga = e.Item as Manga.Core.Domain.Manga;
+                var manga = e.Item as Manga.Core.Domain.Manga;
                 
                 if (manga.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
                     e.Accepted = true;
@@ -165,8 +161,8 @@ namespace MangaSharp.ViewModels
 
             Task.Run(async () =>
             {
-                IPublisherWebService service = EngineContext.Current.ContainerManager.Resolve<IPublisherWebService>(_selectedPublisher.Name);
-                IList<Manga.Core.Domain.Manga> list = await service.GetList();
+                var service = EngineContext.Current.ContainerManager.Resolve<IPublisherWebService>(_selectedPublisher.Name);
+                var list = await service.GetList();
 
                 Items.Clear();
                 Items.AddRange(list);
@@ -199,8 +195,8 @@ namespace MangaSharp.ViewModels
 
             Task.Run(async () =>
             {
-                IPublisherWebService service = EngineContext.Current.ContainerManager.Resolve<IPublisherWebService>(_selectedPublisher.Name);
-                IList<Manga.Core.Domain.Manga> list = await service.Update();
+                var service = EngineContext.Current.ContainerManager.Resolve<IPublisherWebService>(_selectedPublisher.Name);
+                var list = await service.Update();
 
                 Items.Clear();
                 Items.AddRange(list);

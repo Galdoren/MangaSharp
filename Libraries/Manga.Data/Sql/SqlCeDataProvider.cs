@@ -3,7 +3,6 @@ using Manga.Data.Sql.Initializers;
 using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Data.SqlClient;
 using System.Data.SqlServerCe;
 
 namespace Manga.Data.Sql

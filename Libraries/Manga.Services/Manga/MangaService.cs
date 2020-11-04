@@ -2,11 +2,7 @@
 using Manga.Data;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Data.SqlServerCe;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace Manga.Services.Mangas
 {
@@ -75,7 +71,7 @@ namespace Manga.Services.Mangas
                 {
                     using (var command = _dataProvider.GetCommand())
                     {
-                        String sql = @"INSERT INTO [Manga] ([Name], [Url], [PublisherId], [Status], [Year], [IsFavourite], [Size], [ImageUrl], [CreatedDate], [LastUpdatedDate]) 
+                        var sql = @"INSERT INTO [Manga] ([Name], [Url], [PublisherId], [Status], [Year], [IsFavourite], [Size], [ImageUrl], [CreatedDate], [LastUpdatedDate]) 
                                         VALUES (@name, @url, @publisherId, @status, @year, @favourite, @size, @imageUrl, @createdAt, @updatedAt);";
 
                         command.Transaction = transaction.UnderlyingTransaction;
@@ -134,7 +130,7 @@ namespace Manga.Services.Mangas
                         command.Parameters.Add(pCreatedDate);
                         command.Parameters.Add(pUpdatedDate);
 
-                        for (int i = 0; i < list.Count; i++ )
+                        for (var i = 0; i < list.Count; i++ )
                         {
                             pName.Value = list[i].Name;
                             pUrl.Value = list[i].URL;

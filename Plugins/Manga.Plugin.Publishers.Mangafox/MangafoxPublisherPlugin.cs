@@ -31,9 +31,9 @@ namespace Manga.Plugin.Publishers.Mangafox
             IMangaService mangaService,
             IChapterService chapterService)
         {
-            this._publisherService = publisherService;
-            this._mangaService = mangaService;
-            this._chapterService = chapterService;
+            _publisherService = publisherService;
+            _mangaService = mangaService;
+            _chapterService = chapterService;
         }
 
         #endregion

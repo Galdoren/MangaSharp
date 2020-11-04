@@ -22,7 +22,7 @@ namespace Manga.Core.Plugins
                 return null;
             }
             
-            string logoUrl = string.Format("{0}plugins/{1}/logo.jpg", AppDomain.CurrentDomain.BaseDirectory, pluginDirectory.Name);
+            var logoUrl = string.Format("{0}plugins/{1}/logo.jpg", AppDomain.CurrentDomain.BaseDirectory, pluginDirectory.Name);
             return logoUrl;
         }
     }

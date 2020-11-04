@@ -99,7 +99,7 @@ namespace Manga.Data
             catch (DbEntityValidationException e)
             {
                 //use stringbuilder to prevent memory leak
-                StringBuilder builder = new StringBuilder();
+                var builder = new StringBuilder();
 
                 foreach (var validationErrors in e.EntityValidationErrors)
                     foreach (var validationError in validationErrors.ValidationErrors)
@@ -127,7 +127,7 @@ namespace Manga.Data
             catch (DbEntityValidationException e)
             {
                 //use stringbuilder to prevent memory leak
-                StringBuilder builder = new StringBuilder();
+                var builder = new StringBuilder();
 
                 foreach (var validationErrors in e.EntityValidationErrors)
                     foreach (var validationError in validationErrors.ValidationErrors)
@@ -155,7 +155,7 @@ namespace Manga.Data
             catch (DbEntityValidationException e)
             {
                 //use stringbuilder to prevent memory leak
-                StringBuilder builder = new StringBuilder();
+                var builder = new StringBuilder();
 
                 foreach (var validationErrors in e.EntityValidationErrors)
                     foreach (var validationError in validationErrors.ValidationErrors)
@@ -169,7 +169,7 @@ namespace Manga.Data
 
         public void Insert(IEnumerable<T> entities)
         {
-            bool acd = ((MObjectContext)_context).Configuration.AutoDetectChangesEnabled;
+            var acd = ((MObjectContext)_context).Configuration.AutoDetectChangesEnabled;
             try
             {
                 if (entities == null)
@@ -177,7 +177,7 @@ namespace Manga.Data
 
                 // speed hack
                 ((MObjectContext)_context).Configuration.AutoDetectChangesEnabled = false;
-                int i = 0;
+                var i = 0;
                 foreach (var entity in entities)
                 {
                     this.Entities.Add(entity);
@@ -190,7 +190,7 @@ namespace Manga.Data
             catch (DbEntityValidationException e)
             {
                 //use stringbuilder to prevent memory leak
-                StringBuilder builder = new StringBuilder();
+                var builder = new StringBuilder();
 
                 foreach (var validationErrors in e.EntityValidationErrors)
                     foreach (var validationError in validationErrors.ValidationErrors)

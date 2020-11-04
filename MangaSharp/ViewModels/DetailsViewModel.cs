@@ -1,15 +1,7 @@
 ﻿using Caliburn.Micro;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using Manga.Core.Infrastructure;
 using Manga.Services.Publishers;
 using MangaSharp.Infrastructure;
 using MangaSharp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MangaSharp.ViewModels
 {

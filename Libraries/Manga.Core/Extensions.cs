@@ -63,11 +63,11 @@ namespace Manga.Core
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        public static string RemoveExtaSpaces(this string text)
+        public static string RemoveExtraSpaces(this string text)
         {
 
-            Regex regex = new Regex(@"\s{2,}", RegexOptions.IgnorePatternWhitespace |
-                RegexOptions.Singleline);
+            var regex = new Regex(@"\s{2,}", RegexOptions.IgnorePatternWhitespace |
+                                             RegexOptions.Singleline);
             text = regex.Replace(text.Trim(), " "); //This line removes extra spaces and make space exactly one.
             //To remove the  space between the end of a word and a punctuation mark used in the text we will
             //be using following line of code
@@ -83,8 +83,8 @@ namespace Manga.Core
         /// <returns>Modified String which is valid for being a file name</returns>
         public static string RemoveIllegalCharacters(this string text)
         {
-            string illegalCharacters = new string(System.IO.Path.GetInvalidPathChars()) + new string(System.IO.Path.GetInvalidFileNameChars());
-            Regex regex = new Regex(string.Format("[{0}]", Regex.Escape(illegalCharacters)));
+            var illegalCharacters = new string(System.IO.Path.GetInvalidPathChars()) + new string(System.IO.Path.GetInvalidFileNameChars());
+            var regex = new Regex(string.Format("[{0}]", Regex.Escape(illegalCharacters)));
             text = regex.Replace(text, " ");
             return text;
         }
@@ -95,7 +95,7 @@ namespace Manga.Core
         /// <returns>Modified String which is valid for being an entry</returns>
         public static string SQLIllagalCharacters(this string text)
         {
-            Regex regex = new Regex(string.Format("[{0}]", Regex.Escape("'")));
+            var regex = new Regex(string.Format("[{0}]", Regex.Escape("'")));
             text = regex.Replace(text, " ");
             return text;
         }
@@ -110,7 +110,7 @@ namespace Manga.Core
             if (dictionary == null)
                 throw new System.ArgumentNullException("dictionary");
 
-            foreach (System.Collections.Generic.KeyValuePair<TKey, TValue> pair in dictionary)
+            foreach (var pair in dictionary)
                 if (value.Equals(pair.Value))
                 {
                     key = pair.Key;
@@ -134,16 +134,16 @@ namespace Manga.Core
 
         public static void ShiftLeft<T>(this T[] array, int start, int end)
         {
-            T first = array[start];
-            for (int i = start; i < end; i++)
+            var first = array[start];
+            for (var i = start; i < end; i++)
                 array[i] = array[i + 1];
             array[end] = first;
         }
 
         public static void ShiftRight<T>(this T[] array, int start, int end)
         {
-            T last = array[end];
-            for (int i = start + 1; i < end; i++)
+            var last = array[end];
+            for (var i = start + 1; i < end; i++)
                 array[i] = array[i - 1];
             array[start] = last;
         }
@@ -162,7 +162,7 @@ namespace Manga.Core
             }
             else if (Regex.IsMatch(input, "^.*( ago)$"))
             {
-                String[] tokens = input.Split(' ');
+                var tokens = input.Split(' ');
 
                 switch (tokens[1])
                 {

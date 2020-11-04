@@ -1,27 +1,22 @@
 ﻿using Caliburn.Metro.Autofac;
 using Caliburn.Micro;
-using Manga.Core.Data;
 using Manga.Core.Infrastructure;
-using Manga.Core.Infrastructure.DependencyManagement;
 using MangaSharp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Autofac;
-using System.Reflection;
-using Autofac.Core;
-using Autofac.Features.Metadata;
 using Autofac.Extras.AttributeMetadata;
-using MangaSharp.Infrastructure;
 using Autofac.Features.AttributeFilters;
+using System.Windows.Threading;
+using Manga.Common.Enums;
+using Manga.Common.Interfaces;
 
 namespace MangaSharp
 {
     public class AppBootstrapper : CaliburnMetroAutofacBootstrapper<AppViewModel>
     {
-        new protected IContainer Container { get; set; }
+        protected new IContainer Container { get; set; }
 
         protected override void Configure()
         {
@@ -33,9 +28,9 @@ namespace MangaSharp
 
             //  validate settings
             if (CreateWindowManager == null)
-                throw new ArgumentNullException("CreateWindowManager");
+                throw new ArgumentNullException(nameof(CreateWindowManager));
             if (CreateEventAggregator == null)
-                throw new ArgumentNullException("CreateEventAggregator");
+                throw new ArgumentNullException(nameof(CreateEventAggregator));
 
             //  configure container
             var builder = new ContainerBuilder();
@@ -45,11 +40,11 @@ namespace MangaSharp
                 //  must be a type with a name that ends with ViewModel
               .Where(type => type.Name.EndsWith("ViewModel"))
                 //  must be in a namespace ending with ViewModels
-              .Where(type => EnforceNamespaceConvention ? (!(string.IsNullOrWhiteSpace(type.Namespace)) && type.Namespace.EndsWith("ViewModels")) : true)
-                //  must implement INotifyPropertyChanged (deriving from PropertyChangedBase will statisfy this)
+              .Where(type => !EnforceNamespaceConvention || !string.IsNullOrWhiteSpace(type.Namespace) && type.Namespace.EndsWith("ViewModels"))
+                //  must implement INotifyPropertyChanged (deriving from PropertyChangedBase will satisfy this)
               .Where(type => type.GetInterface(ViewModelBaseType.Name, false) != null)
                 // must implement custom IMainScreenTabItem interface
-              .Where(type => type.GetInterface(typeof(IViewModel).Name) != null && !type.IsAbstract && type.IsClass)                
+              .Where(type => type.GetInterface(nameof(IViewModel)) != null && !type.IsAbstract && type.IsClass)                
                 //  registered as view model
               .As<IViewModel>()
                 //  allow metadata filter
@@ -62,16 +57,16 @@ namespace MangaSharp
                 //  must be a type with a name that ends with View
               .Where(type => type.Name.EndsWith("View"))
                 //  must be in a namespace that ends in Views
-              .Where(type => EnforceNamespaceConvention ? (!(string.IsNullOrWhiteSpace(type.Namespace)) && type.Namespace.EndsWith("Views")) : true)
+              .Where(type => !EnforceNamespaceConvention || !string.IsNullOrWhiteSpace(type.Namespace) && type.Namespace.EndsWith("Views"))
                 //  registered as self
               .AsSelf()
                 //  always create a new one
               .InstancePerDependency();
 
             //  register the single window manager for this container
-            builder.Register<IWindowManager>(c => CreateWindowManager()).InstancePerLifetimeScope();
+            builder.Register(c => CreateWindowManager()).InstancePerLifetimeScope();
             //  register the single event aggregator for this container
-            builder.Register<IEventAggregator>(c => CreateEventAggregator()).InstancePerLifetimeScope();
+            builder.Register(c => CreateEventAggregator()).InstancePerLifetimeScope();
 
             
 
@@ -84,12 +79,13 @@ namespace MangaSharp
 
             builder.RegisterModule<AttributedMetadataModule>();
 
+            // TODO: Replace obsolete method
             builder.Update(EngineContext.Current.ContainerManager.Container);
             
-            this.Container = EngineContext.Current.ContainerManager.Container;
+            Container = EngineContext.Current.ContainerManager.Container;
         }
 
-        protected override void ConfigureContainer(Autofac.ContainerBuilder builder)
+        protected override void ConfigureContainer(ContainerBuilder builder)
         {
             var config = new TypeMappingConfiguration
             {
@@ -147,7 +143,7 @@ namespace MangaSharp
                 if (Container.TryResolveNamed(key, service, out instance))
                     return instance;
             }
-            throw new Exception(string.Format("Could not locate any instances of contract {0}.", key ?? service.Name));
+            throw new Exception($"Could not locate any instances of contract {key ?? service.Name}.");
         }
 
         protected override IEnumerable<object> GetAllInstances(Type service)
@@ -155,6 +151,11 @@ namespace MangaSharp
             return Container.Resolve(typeof(IEnumerable<>).MakeGenericType(service)) as IEnumerable<object>;
 
             //return base.GetAllInstances(service);
+        }
+
+        protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            Container.Resolve<ILogger>().Log(e.Exception.ToString(), LogLevel.Error);
         }
     }
 }

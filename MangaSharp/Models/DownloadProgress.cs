@@ -1,11 +1,6 @@
 ﻿using Manga.Core.Infrastructure;
 using Manga.Services.Net;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MangaSharp.Models
 {

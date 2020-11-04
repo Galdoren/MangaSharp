@@ -2,7 +2,6 @@
 using Manga.Core.Infrastructure.DependencyManagement;
 using Manga.Plugin.Publishers.Manganelo.Services;
 using Manga.Services.Publishers;
-using System;
 
 namespace Manga.Plugin.Publishers.Manganelo
 {
