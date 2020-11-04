@@ -1,9 +1,5 @@
 ﻿using MangaSharp.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MangaSharp.Extensions
 {
@@ -23,7 +19,7 @@ namespace MangaSharp.Extensions
             IList<MangaModel> list = new List<MangaModel>();
             if (entityCollection != null)
             {
-                for (int i = 0; i < entityCollection.Count; i++ )
+                for (var i = 0; i < entityCollection.Count; i++ )
                 {
                     list.Add(new MangaModel(entityCollection[i]));
                 }

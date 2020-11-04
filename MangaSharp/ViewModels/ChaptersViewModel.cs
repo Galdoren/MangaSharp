@@ -1,14 +1,9 @@
 ﻿using Caliburn.Micro;
-using Manga.Core.Domain;
 using Manga.Services.Net;
 using Manga.Services.Publishers;
 using MangaSharp.Infrastructure;
 using MangaSharp.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace MangaSharp.ViewModels
@@ -82,12 +77,12 @@ namespace MangaSharp.ViewModels
 
         public void Download()
         {
-            IEnumerable<Chapter> selectedChapters = from c in _model.Chapters
+            var selectedChapters = from c in _model.Chapters
                                                          where c.IsSelected
                                                          orderby c.Index ascending
                                                          select c.Chapter;
 
-            ChapterQueue queue = new ChapterQueue(selectedChapters.Count());
+            var queue = new ChapterQueue(selectedChapters.Count());
             queue.Manga = Model.Name;
             queue.Progress = new DownloadProgress()
             {

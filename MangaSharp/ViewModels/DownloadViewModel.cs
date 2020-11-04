@@ -4,11 +4,8 @@ using MangaSharp.Infrastructure;
 using MangaSharp.Models;
 using MangaSharp.Services;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace MangaSharp.ViewModels
 {
@@ -70,10 +67,10 @@ namespace MangaSharp.ViewModels
 
         public void AddJob()
         {
-            Random random = new Random();
+            var random = new Random();
             Task.Run(() =>
             {
-                for (int j = 0; j < 10; j++)
+                for (var j = 0; j < 10; j++)
                 {
                     var jobs = new ChapterQueue(5);
                     jobs.Manga = String.Format("Naruto #{0}", j + 1);
@@ -89,7 +86,7 @@ namespace MangaSharp.ViewModels
                     
                     Task.Run(() =>
                     {
-                        for (int i = 0; i < jobs.Size; i++)
+                        for (var i = 0; i < jobs.Size; i++)
                         {
                             jobs.Enqueue(new AsyncChapterJob());
                             Thread.Sleep(200 + random.Next(800));

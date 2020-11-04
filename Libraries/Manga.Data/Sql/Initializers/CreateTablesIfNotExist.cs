@@ -47,7 +47,7 @@ namespace Manga.Data.Sql.Initializers
             }
             if (dbExists)
             {
-                bool createTables = false;
+                var createTables = false;
                 if (_tablesToValidate != null && _tablesToValidate.Length > 0)
                 {
                     //we have some table names to validate
@@ -57,7 +57,7 @@ namespace Manga.Data.Sql.Initializers
                 else
                 {
                     //check whether tables are already created
-                    int numberOfTables = 0;
+                    var numberOfTables = 0;
                     foreach (var t1 in context.Database.SqlQuery<int>("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_type = 'BASE TABLE' "))
                         numberOfTables = t1;
 

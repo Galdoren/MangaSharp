@@ -23,7 +23,7 @@ namespace MangaSharp.Infrastructure
             {
                 if (!_suspendCollectionChangeNotification)
                 {
-                    Dispatcher dispatcher = (from NotifyCollectionChangedEventHandler nh in eh.GetInvocationList()
+                    var dispatcher = (from NotifyCollectionChangedEventHandler nh in eh.GetInvocationList()
                                              let dpo = nh.Target as DispatcherObject
                                              where dpo != null
                                              select dpo.Dispatcher).FirstOrDefault();

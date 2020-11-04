@@ -190,11 +190,11 @@ namespace MangaSharp.Behaviors
                 // determine if the TextBlock has been clipped
                 var layoutClip = LayoutInformation.GetLayoutClip(_textBlock);
 
-                bool needsClipping = layoutClip != null
-                    && ((_textBlock.TextWrapping == TextWrapping.NoWrap && layoutClip.Bounds.Width > 0
-                    && layoutClip.Bounds.Width < _textBlock.ActualWidth)
-                    || (_textBlock.TextWrapping == TextWrapping.Wrap && layoutClip.Bounds.Height > 0
-                    && layoutClip.Bounds.Height < _textBlock.ActualHeight));
+                var needsClipping = layoutClip != null
+                                    && ((_textBlock.TextWrapping == TextWrapping.NoWrap && layoutClip.Bounds.Width > 0
+                                            && layoutClip.Bounds.Width < _textBlock.ActualWidth)
+                                        || (_textBlock.TextWrapping == TextWrapping.Wrap && layoutClip.Bounds.Height > 0
+                                            && layoutClip.Bounds.Height < _textBlock.ActualHeight));
 
                 // if the TextBlock was clipped, but is no longer clipped, then
                 // strip all the fancy features

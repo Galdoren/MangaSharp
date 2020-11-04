@@ -22,7 +22,7 @@ namespace MangaSharp
             // initialize Engine
             EngineContext.Initialize(false);
 
-            bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
+            var databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
 
             if(databaseInstalled)
             {
@@ -55,7 +55,7 @@ namespace MangaSharp
             // a little hack to initialize database on start
             if(databaseInstalled)
             {
-                IPublisherService publisherService = EngineContext.Current.Resolve<IPublisherService>();
+                var publisherService = EngineContext.Current.Resolve<IPublisherService>();
                 publisherService.GetAllPublishers();
             }
         }

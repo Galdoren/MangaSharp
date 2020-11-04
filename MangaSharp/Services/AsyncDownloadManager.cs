@@ -1,15 +1,10 @@
-﻿using Manga.Core.Domain;
-using Manga.Core.Infrastructure;
+﻿using Manga.Core.Infrastructure;
 using Manga.Services.Net;
-using MangaSharp.Models;
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -93,7 +88,7 @@ namespace MangaSharp.Services
         /// </summary>        
         protected void TransferLoop()
         {
-            CancellationToken token = _cancellationTokenSource.Token;
+            var token = _cancellationTokenSource.Token;
             Task.Run(() =>
             {
                 try
@@ -119,7 +114,7 @@ namespace MangaSharp.Services
 
         protected void DownloadLoop()
         {
-            CancellationToken token = _cancellationTokenSource.Token;
+            var token = _cancellationTokenSource.Token;
             Task.Run(() =>
             {
                 try
@@ -191,17 +186,17 @@ namespace MangaSharp.Services
         /// <param name="progress"></param>
         protected void DownloadRemoteImageFile(ImageFile file, IDownloadProgress progress)
         {            
-            int tryCount = 0;
-            bool done = false;
+            var tryCount = 0;
+            var done = false;
 
             while (tryCount < 5)
             {
                 try
                 {
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(file.Url);
+                    var request = (HttpWebRequest)WebRequest.Create(file.Url);
                     request.ServicePoint.Expect100Continue = false;
                     request.Proxy = null;
-                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    using (var response = (HttpWebResponse)request.GetResponse())
                     {
                         // Check that the remote file was found. The ContentType
                         // check is performed since a request for a non-existent
@@ -214,10 +209,10 @@ namespace MangaSharp.Services
                             response.ContentType.StartsWith("image", StringComparison.OrdinalIgnoreCase))
                         {
                             // if the remote file was found, download oit
-                            using (Stream inputStream = response.GetResponseStream())
+                            using (var inputStream = response.GetResponseStream())
                             using (Stream outputStream = File.OpenWrite(file.Filename))
                             {
-                                byte[] buffer = new byte[4096];
+                                var buffer = new byte[4096];
                                 int bytesRead;
                                 do
                                 {

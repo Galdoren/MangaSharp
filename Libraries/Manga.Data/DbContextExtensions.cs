@@ -13,10 +13,10 @@ namespace Manga.Data
         private static T InnerGetCopy<T>(IDbContext context, T currentCopy, Func<DbEntityEntry<T>, DbPropertyValues> func) where T : BaseEntity
         {
             //Get the database context
-            DbContext dbContext = CastOrThrow(context);
+            var dbContext = CastOrThrow(context);
 
             //Get the entity tracking object
-            DbEntityEntry<T> entry = GetEntityOrReturnNull(currentCopy, dbContext);
+            var entry = GetEntityOrReturnNull(currentCopy, dbContext);
 
             //The output 
             T output = null;
@@ -24,7 +24,7 @@ namespace Manga.Data
             //Try and get the values
             if (entry != null)
             {
-                DbPropertyValues dbPropertyValues = func(entry);
+                var dbPropertyValues = func(entry);
                 if (dbPropertyValues != null)
                 {
                     output = dbPropertyValues.ToObject() as T;
@@ -48,7 +48,7 @@ namespace Manga.Data
 
         private static DbContext CastOrThrow(IDbContext context)
         {
-            DbContext output = (context as DbContext);
+            var output = (context as DbContext);
 
             if (output == null)
             {

@@ -201,7 +201,7 @@ namespace Manga.Core.Plugins
 
 
             var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
-            bool alreadyMarkedAsInstalled = installedPluginSystemNames
+            var alreadyMarkedAsInstalled = installedPluginSystemNames
                                 .FirstOrDefault(x => x.Equals(systemName, StringComparison.InvariantCultureIgnoreCase)) != null;
             if (!alreadyMarkedAsInstalled)
                 installedPluginSystemNames.Add(systemName);
@@ -227,7 +227,7 @@ namespace Manga.Core.Plugins
 
 
             var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
-            bool alreadyMarkedAsInstalled = installedPluginSystemNames
+            var alreadyMarkedAsInstalled = installedPluginSystemNames
                                 .FirstOrDefault(x => x.Equals(systemName, StringComparison.InvariantCultureIgnoreCase)) != null;
             if (alreadyMarkedAsInstalled)
                 installedPluginSystemNames.Remove(systemName);
@@ -299,12 +299,12 @@ namespace Manga.Core.Plugins
             //do not compare the full assembly name, just filename
             try
             {
-                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.FullName);
+                var fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.FullName);
                 if (fileNameWithoutExt == null)
                     throw new Exception(string.Format("Cannot get file extnension for {0}", fileInfo.Name));
                 foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    string assemblyName = a.FullName.Split(new[] { ',' }).FirstOrDefault();
+                    var assemblyName = a.FullName.Split(new[] { ',' }).FirstOrDefault();
                     if (fileNameWithoutExt.Equals(assemblyName, StringComparison.InvariantCultureIgnoreCase))
                         return true;
                 }

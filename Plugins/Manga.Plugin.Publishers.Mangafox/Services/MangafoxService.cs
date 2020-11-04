@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -20,8 +19,8 @@ namespace Manga.Plugin.Publishers.Mangafox.Services
     {
         #region Constants
 
-        private const string GETLIST_URL = "http://mangafox.me/manga/";
-        private const string SIZE_PATTERN = "(?<=of )([0-9]*)(?=\\t)";
+        private const string GetListUrl = "http://mangafox.me/manga/";
+        private const string SizePattern = "(?<=of )([0-9]*)(?=\\t)";
 
         #endregion
 
@@ -41,12 +40,12 @@ namespace Manga.Plugin.Publishers.Mangafox.Services
             IMangaService mangaService,
             IChapterService chapterService)
         {
-            this._publisherService = publisherService;
-            this._mangaService = mangaService;
-            this._chapterService = chapterService;
+            _publisherService = publisherService;
+            _mangaService = mangaService;
+            _chapterService = chapterService;
             //this._downloadManager = downloadManager;
 
-            this._regex = new Regex(SIZE_PATTERN);
+            _regex = new Regex(SizePattern);
         }
 
         #endregion
@@ -55,209 +54,194 @@ namespace Manga.Plugin.Publishers.Mangafox.Services
 
         protected virtual async Task GetDetailsMinimal(Core.Domain.Manga manga)
         {
-            try
+            // create a web request to the manga homepage
+            var webReq = (HttpWebRequest)WebRequest.Create(manga.URL);
+            using (var webRes = await webReq.GetResponseAsync()) // get web response
             {
-                // create a web request to the manga homepage
-                HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(manga.URL);
-                using (WebResponse webRes = await webReq.GetResponseAsync()) // get web response
+                // open a streamreader to read response content
+                using (var mystream = new StreamReader(webRes.GetResponseStream()))
                 {
-                    // open a streamreader to read response content
-                    using (System.IO.StreamReader mystream = new StreamReader(webRes.GetResponseStream()))
+                    // htmldocument is used for seeing html code as xml code and selecting spesific parts easily
+                    // it decreases time to extract the parts we want from html
+                    var doc = new HtmlDocument();
+                    // if there is a stream load the html content
+                    if (mystream != null)
                     {
-                        // htmldocument is used for seeing html code as xml code and selecting spesific parts easily
-                        // it decreases time to extract the parts we want from html
-                        HtmlDocument doc = new HtmlDocument();
-                        // if there is a stream load the html content
-                        if (mystream != null)
-                        {
-                            doc.Load(mystream);
-                        }
+                        doc.Load(mystream);
+                    }
 
-                        // create a collection of nodes which holds chapters division in html code
-                        HtmlNodeCollection coll = doc.DocumentNode.SelectNodes("//div[@id='chapters']//ul[@class='chlist']//li//div");
-                        if (coll != null) // if there are chapters which means collection is not empty, continue
+                    // create a collection of nodes which holds chapters division in html code
+                    var coll = doc.DocumentNode.SelectNodes("//div[@id='chapters']//ul[@class='chlist']//li//div");
+                    if (coll != null) // if there are chapters which means collection is not empty, continue
+                    {
+                        IList<Chapter> tempList = new List<Chapter>();
+                        // foreach node in collection, get info about chapter such as
+                        for (var i = coll.Count - 1; i >= 0; i--)
                         {
-                            IList<Manga.Core.Domain.Chapter> tempList = new List<Manga.Core.Domain.Chapter>();
-                            // foreach node in collection, get info about chapter such as
-                            for (int i = coll.Count - 1; i >= 0; i--)
-                            {
-                                Manga.Core.Domain.Chapter chapter = new Core.Domain.Chapter();
+                            var chapter = new Chapter();
 
-                                String name1;
-                                // get the extended name of the chapter such as Chapter 13 - !""This part""!
-                                HtmlNode node1 = coll[i].SelectSingleNode("h3//span[@class='title nowrap'] | h4//span[@class='title nowrap']");
-                                if (node1 == null) // if extended name doesnt exists set name1 to null
-                                    name1 = null;
-                                else // otherwise get the name and store it in name1 field
-                                    name1 = coll[i].SelectSingleNode("h3//span[@class='title nowrap'] | h4//span[@class='title nowrap']").InnerText;
-                                // get the number of  the chapter such as !""This Part""! - Hello World and store it in name2 field
-                                String name2 = coll[i].SelectSingleNode("h3//a | h4//a").InnerText.RemoveExtaSpaces();
-                                // merge the name, if name1 exsists, store them in one string-name-, if it does not store only name2
-                                chapter.Name = (name1 == null ? name2.RemoveExtaSpaces() : (name2.RemoveExtaSpaces() + " : " + name1.RemoveExtaSpaces()));
-                                // get link of the chapter from nodes
-                                chapter.Url = coll[i].SelectSingleNode("h3//a | h4//a").Attributes["href"].Value;
-                                // set the chapter order index
-                                chapter.Index = coll.Count - 1 - i;
-                                // get unique id of the manga and set it to this chapter                                
-                                chapter.MangaId = manga.Id;
-                                // get release date of the chapter
-                                // TODO
-                                // convert 'today', 'yesterday', and these things to the date later
-                                //chapter.Date = coll[i].SelectSingleNode("span[@class='date']").InnerText;       
-                                manga.Chapters.Add(chapter);
-                                _mangaService.UpdateManga(manga);
-                            }
+                            string name1;
+                            // get the extended name of the chapter such as Chapter 13 - !""This part""!
+                            var node1 = coll[i].SelectSingleNode("h3//span[@class='title nowrap'] | h4//span[@class='title nowrap']");
+                            if (node1 == null) // if extended name doesnt exists set name1 to null
+                                name1 = null;
+                            else // otherwise get the name and store it in name1 field
+                                name1 = coll[i].SelectSingleNode("h3//span[@class='title nowrap'] | h4//span[@class='title nowrap']").InnerText;
+                            // get the number of  the chapter such as !""This Part""! - Hello World and store it in name2 field
+                            var name2 = coll[i].SelectSingleNode("h3//a | h4//a").InnerText.RemoveExtraSpaces();
+                            // merge the name, if name1 exists, store them in one string-name-, if it does not store only name2
+                            chapter.Name = (name1 == null ? name2.RemoveExtraSpaces() : (name2.RemoveExtraSpaces() + " : " + name1.RemoveExtraSpaces()));
+                            // get link of the chapter from nodes
+                            chapter.Url = coll[i].SelectSingleNode("h3//a | h4//a").Attributes["href"].Value;
+                            // set the chapter order index
+                            chapter.Index = coll.Count - 1 - i;
+                            // get unique id of the manga and set it to this chapter                                
+                            chapter.MangaId = manga.Id;
+                            // get release date of the chapter
+                            // TODO
+                            // convert 'today', 'yesterday', and these things to the date later
+                            //chapter.Date = coll[i].SelectSingleNode("span[@class='date']").InnerText;       
+                            manga.Chapters.Add(chapter);
+                            _mangaService.UpdateManga(manga);
                         }
                     }
                 }
-            }
-            catch (Exception)
-            {
-                
-                throw;
             }
         }
 
         protected virtual async Task GetDetailsExtended(Core.Domain.Manga manga)
         {
-            try
+            // create a web request to the manga homepage
+            var webReq = (HttpWebRequest)WebRequest.Create(manga.URL);
+            using (var webRes = await webReq.GetResponseAsync()) // get web response
             {
-                // create a web request to the manga homepage
-                HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(manga.URL);
-                using (WebResponse webRes = await webReq.GetResponseAsync()) // get web response
+                // open a streamreader to read response content
+                using (var mystream = new StreamReader(webRes.GetResponseStream()))
                 {
-                    // open a streamreader to read response content
-                    using (System.IO.StreamReader mystream = new StreamReader(webRes.GetResponseStream()))
+                    // htmldocument is used for seeing html code as xml code and selecting spesific parts easily
+                    // it decreases time to extract the parts we want from html
+                    var doc = new HtmlDocument();
+                    // if there is a stream load the html content
+                    if (mystream != null)
                     {
-                        // htmldocument is used for seeing html code as xml code and selecting spesific parts easily
-                        // it decreases time to extract the parts we want from html
-                        HtmlDocument doc = new HtmlDocument();
-                        // if there is a stream load the html content
-                        if (mystream != null)
-                        {
-                            doc.Load(mystream);
-                        }
+                        doc.Load(mystream);
+                    }
 
-                        HtmlNodeCollection col = doc.DocumentNode.SelectNodes("//*[@id='title']//table//tr[2]/td");
+                    var col = doc.DocumentNode.SelectNodes("//*[@id='title']//table//tr[2]/td");
                         
-                        manga.Year = int.Parse(col[0].SelectSingleNode("a").InnerText);
+                    manga.Year = int.Parse(col[0].SelectSingleNode("a").InnerText);
 
-                        HtmlNodeCollection authcol = col[1].SelectNodes("a");
+                    var authcol = col[1].SelectNodes("a");
 
-                        if (authcol != null)
+                    if (authcol != null)
+                    {
+                        manga.Author = string.Empty;
+                        foreach (var node in authcol)
                         {
-                            manga.Author = String.Empty;
-                            foreach (HtmlNode node in authcol)
-                            {
-                                manga.Author += WebUtility.HtmlDecode(node.InnerText);
-                            }
+                            manga.Author += WebUtility.HtmlDecode(node.InnerText);
                         }
+                    }
 
-                        HtmlNodeCollection artcol = col[2].SelectNodes("a");
+                    var artcol = col[2].SelectNodes("a");
 
-                        if (artcol != null)
+                    if (artcol != null)
+                    {
+                        manga.Artist = string.Empty;
+                        foreach (var node in artcol)
                         {
-                            manga.Artist = String.Empty;
-                            foreach (HtmlNode node in artcol)
-                            {
-                                manga.Artist += WebUtility.HtmlDecode(node.InnerText);
-                            }
+                            manga.Artist += WebUtility.HtmlDecode(node.InnerText);
                         }
+                    }
 
-                        HtmlNodeCollection genrecol = col[3].SelectNodes("a");
+                    var genrecol = col[3].SelectNodes("a");
 
-                        if (genrecol != null)
+                    if (genrecol != null)
+                    {
+                        manga.Genres = new List<string>(genrecol.Count);
+                        foreach (var genre in genrecol)
                         {
-                            manga.Genres = new List<string>(genrecol.Count);
-                            for (int i = 0; i < genrecol.Count; i++)
-                            {
-                                manga.Genres.Add(WebUtility.HtmlDecode(genrecol[i].InnerText));
-                            }
+                            manga.Genres.Add(WebUtility.HtmlDecode(genre.InnerText));
                         }
+                    }
 
-                        HtmlNode node2 = doc.DocumentNode.SelectSingleNode("//*[@id='title']//p[@class='summary']");
-                        String summary = (node2 != null ? node2.InnerText : null);
-                        manga.Description = WebUtility.HtmlDecode(summary);
+                    var node2 = doc.DocumentNode.SelectSingleNode("//*[@id='title']//p[@class='summary']");
+                    var summary = (node2 != null ? node2.InnerText : null);
+                    manga.Description = WebUtility.HtmlDecode(summary);
 
-                        HtmlNode imgnode = doc.DocumentNode.SelectSingleNode("//div[@class='left']//div[@id='series_info']//div[@class='cover']//img");
-                        if (imgnode != null)
+                    var imgnode = doc.DocumentNode.SelectSingleNode("//div[@class='left']//div[@id='series_info']//div[@class='cover']//img");
+                    if (imgnode != null)
+                    {
+                        var imgpath = imgnode.Attributes["src"].Value;
+
+                        //manga.CoverImage = GetImageFromUrl(imgpath);
+
+                        manga.ImageUrl = imgpath;
+                    }
+
+                    var coll = doc.DocumentNode.SelectNodes("//div[@id='chapters']//ul[@class='chlist']//li//div");
+                    IEqualityComparer<Chapter> comparer = new ChapterUrlEqualityComparer();
+                    if (coll != null)
+                    {
+                        for (var i = coll.Count - 1; i >= 0; i--)
                         {
-                            string imgpath = imgnode.Attributes["src"].Value;
+                            var chapter = new Chapter();
+                            string name1;
+                            var node1 = coll[i].SelectSingleNode("h3//span[@class='title nowrap'] | h4//span[@class='title nowrap']");
+                            if (node1 == null)
+                                name1 = null;
+                            else
+                                name1 = coll[i].SelectSingleNode("h3//span[@class='title nowrap'] | h4//span[@class='title nowrap']").InnerText;
+                            var name2 = coll[i].SelectSingleNode("h3//a | h4//a").InnerText.RemoveExtraSpaces();
+                            chapter.Name = (name1 == null ? name2.RemoveExtraSpaces() : (name2.RemoveExtraSpaces() + " : " + name1.RemoveExtraSpaces()));
+                            chapter.Url = coll[i].SelectSingleNode("h3//a | h4//a").Attributes["href"].Value;
+                            chapter.Index = (coll.Count - 1) - i;
+                            chapter.MangaId = manga.Id;
+                            chapter.Date = coll[i].SelectSingleNode("span[@class='date']").InnerText.ToDateTime();
+                            chapter.IsDownloaded = false;
+                            chapter.DownloadedImageCount = 0;
+                            chapter.DownloadPath = string.Empty;
+                            //chapter.Date = coll[i].SelectSingleNode("span[@class='date']").InnerText;
 
-                            //manga.CoverImage = GetImageFromUrl(imgpath);
+                            if (manga.Chapters.Contains(chapter, comparer))
+                                continue;
 
-                            manga.ImageUrl = imgpath;
-                        }
-
-                        HtmlNodeCollection coll = doc.DocumentNode.SelectNodes("//div[@id='chapters']//ul[@class='chlist']//li//div");
-                        IEqualityComparer<Chapter> comparer = new ChapterUrlEqualityComparer();
-                        if (coll != null)
-                        {
-                            for (int i = coll.Count - 1; i >= 0; i--)
-                            {
-                                Manga.Core.Domain.Chapter chapter = new Manga.Core.Domain.Chapter();
-                                String name1;
-                                HtmlNode node1 = coll[i].SelectSingleNode("h3//span[@class='title nowrap'] | h4//span[@class='title nowrap']");
-                                if (node1 == null)
-                                    name1 = null;
-                                else
-                                    name1 = coll[i].SelectSingleNode("h3//span[@class='title nowrap'] | h4//span[@class='title nowrap']").InnerText;
-                                String name2 = coll[i].SelectSingleNode("h3//a | h4//a").InnerText.RemoveExtaSpaces();
-                                chapter.Name = (name1 == null ? name2.RemoveExtaSpaces() : (name2.RemoveExtaSpaces() + " : " + name1.RemoveExtaSpaces()));
-                                chapter.Url = coll[i].SelectSingleNode("h3//a | h4//a").Attributes["href"].Value;
-                                chapter.Index = (coll.Count - 1) - i;
-                                chapter.MangaId = manga.Id;
-                                chapter.Date = coll[i].SelectSingleNode("span[@class='date']").InnerText.ToDateTime();
-                                chapter.IsDownloaded = false;
-                                chapter.DownloadedImageCount = 0;
-                                chapter.DownloadPath = String.Empty;
-                                //chapter.Date = coll[i].SelectSingleNode("span[@class='date']").InnerText;
-
-                                if (manga.Chapters.Contains(chapter, comparer))
-                                    continue;
-
-                                manga.Chapters.Add(chapter);
-                            }
+                            manga.Chapters.Add(chapter);
                         }
                     }
                 }
-                _mangaService.UpdateManga(manga);
             }
-            catch(Exception)
-            {
-                throw;
-            }
+            _mangaService.UpdateManga(manga);
         }
 
-        protected virtual async Task DownloadChapterToFolder(Core.Domain.Chapter chapter, DownloadOptions options/*, ChapterQueue queue*/)
+        protected virtual async Task DownloadChapterToFolder(Chapter chapter, DownloadOptions options/*, ChapterQueue queue*/)
         {
             //options.Progress.Text = String.Format("Downloading {0}", chapter.Name);
             // Create directory path
-            string dir = string.Format("{0}\\{1}\\{2}", options.Path,
+            var dir = string.Format("{0}\\{1}\\{2}", options.Path,
                     chapter.Manga.Name.Trim().RemoveIllegalCharacters(),
                     chapter.Name.Trim().RemoveIllegalCharacters());
 
-            System.IO.Directory.CreateDirectory(dir);
+            Directory.CreateDirectory(dir);
 
             // Get chapter size
             chapter.Size = await GetChapterSize(chapter);
-            int l_index = chapter.Url.LastIndexOf('/');
+            var l_index = chapter.Url.LastIndexOf('/');
 
-            for(int i = 0; i < chapter.Size; i++)
+            for(var i = 0; i < chapter.Size; i++)
             {
-                HtmlDocument document = new HtmlDocument();
-                string url = string.Format("{0}{1}.html", chapter.Url.Substring(0, l_index + 1), i + 1);
-                string imageUrl = string.Empty;
+                var document = new HtmlDocument();
+                var url = string.Format("{0}{1}.html", chapter.Url.Substring(0, l_index + 1), i + 1);
+                var imageUrl = string.Empty;
 
-                WebRequest request = HttpWebRequest.Create(url);
-                using (WebResponse response = await request.GetResponseAsync())
+                var request = WebRequest.Create(url);
+                using (var response = await request.GetResponseAsync())
                 {
-                    using (Stream stream = response.GetResponseStream())
+                    using (var stream = response.GetResponseStream())
                     {
                         if (stream != null)
                             document.Load(stream);
 
-                        HtmlNode node = document.DocumentNode.SelectSingleNode("//body/div/a/img");
+                        var node = document.DocumentNode.SelectSingleNode("//body/div/a/img");
                         imageUrl = node.Attributes["src"].Value;
                         stream.Close();
                     }
@@ -282,16 +266,16 @@ namespace Manga.Plugin.Publishers.Mangafox.Services
             }
         }
 
-        protected virtual async Task<int> GetChapterSize(Core.Domain.Chapter chapter)
+        protected virtual async Task<int> GetChapterSize(Chapter chapter)
         {
             // number to return
             int value;
             // skipping this part for more info check other parts
-            HtmlDocument Doc = new HtmlDocument();
-            System.Net.WebRequest webReq = System.Net.WebRequest.Create(chapter.Url);
-            using (System.Net.WebResponse webRes = await webReq.GetResponseAsync())
+            var Doc = new HtmlDocument();
+            var webReq = WebRequest.Create(chapter.Url);
+            using (var webRes = await webReq.GetResponseAsync())
             {
-                using (System.IO.Stream mystream = webRes.GetResponseStream())
+                using (var mystream = webRes.GetResponseStream())
                 {
                     if (mystream != null)
                     {
@@ -303,7 +287,7 @@ namespace Manga.Plugin.Publishers.Mangafox.Services
                         return -1;
                     }
 
-                    HtmlNode node = Doc.DocumentNode.SelectSingleNode("//div[@class='l']");
+                    var node = Doc.DocumentNode.SelectSingleNode("//div[@class='l']");
                     // get the size part from html content by using regular expressions
                     value = int.Parse(_regex.Match(node.InnerText).Value);
 
@@ -322,7 +306,7 @@ namespace Manga.Plugin.Publishers.Mangafox.Services
         {
             Console.Write("Mangafox GetList");
             var publisher = _publisherService.GetPublisherByName("Mangafox");
-            IList<Manga.Core.Domain.Manga> list = _mangaService.GetAllManga(publisher.Id);
+            var list = _mangaService.GetAllManga(publisher.Id);
             return list;
         }
 
@@ -333,23 +317,23 @@ namespace Manga.Plugin.Publishers.Mangafox.Services
         public async Task<IList<Core.Domain.Manga>> Update()
         {
             Console.WriteLine("Mangafox GetList");
-            IList<Manga.Core.Domain.Manga> list_db = new List<Manga.Core.Domain.Manga>();
-            IList<Manga.Core.Domain.Manga> list = new List<Manga.Core.Domain.Manga>();
+            IList<Core.Domain.Manga> list_db = new List<Manga.Core.Domain.Manga>();
+            IList<Core.Domain.Manga> list = new List<Manga.Core.Domain.Manga>();
             var publisher = _publisherService.GetPublisherByName("Mangafox");
             list_db = _mangaService.GetAllManga(publisher.Id);
             
             try
             {
-                DateTime start = DateTime.Now;
-                System.Net.ServicePointManager.Expect100Continue = false;
-                System.Net.ServicePointManager.UseNagleAlgorithm = false;
-                System.Net.ServicePointManager.CheckCertificateRevocationList = false;
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(GETLIST_URL);
+                var start = DateTime.Now;
+                ServicePointManager.Expect100Continue = false;
+                ServicePointManager.UseNagleAlgorithm = false;
+                ServicePointManager.CheckCertificateRevocationList = false;
+                var request = (HttpWebRequest)WebRequest.Create(GetListUrl);
                 request.Proxy = null;
                 
                 Console.WriteLine("Loading Request took {0} ms", (DateTime.Now - start).TotalMilliseconds);
                 start = DateTime.Now;
-                using (WebResponse response = await request.GetResponseAsync()) // get web response
+                using (var response = await request.GetResponseAsync()) // get web response
                 {   // open a streamreader to read response content
                     Console.WriteLine("Loading Response took {0} ms", (DateTime.Now - start).TotalMilliseconds);
                     start = DateTime.Now;
@@ -365,7 +349,7 @@ namespace Manga.Plugin.Publishers.Mangafox.Services
                         ms.Seek(0, SeekOrigin.Begin);
                         // htmldocument is used for seeing html code as xml code and selecting spesific parts easily
                         // it decreases time to extract the parts we want from html
-                        HtmlDocument doc = new HtmlDocument();
+                        var doc = new HtmlDocument();
                         // if there is a stream load the html content
                         start = DateTime.Now;
                         if (ms != null)
@@ -374,12 +358,12 @@ namespace Manga.Plugin.Publishers.Mangafox.Services
                         }
                         Console.WriteLine("Loading HtmlDocument took {0} ms", (DateTime.Now - start).TotalMilliseconds);
                         // select the manga list div field and get all the links from it
-                        HtmlNodeCollection col = doc.DocumentNode.SelectNodes("//div[@class='manga_list']//li//a");
+                        var col = doc.DocumentNode.SelectNodes("//div[@class='manga_list']//li//a");
                         // create an array of mangamodel[number of nodes in col]
 
-                        DateTime now = DateTime.Now;
+                        var now = DateTime.Now;
                         // for each nodes in collection create a manga and fill the manga information and add it to the array
-                        for (int i = 0; i < col.Count; i++)
+                        for (var i = 0; i < col.Count; i++)
                         {
                             var manga = new Manga.Core.Domain.Manga()
                             {
@@ -428,23 +412,22 @@ namespace Manga.Plugin.Publishers.Mangafox.Services
                     await GetDetailsExtended(manga);
                     break;
                 default:
-                    break;
+                    throw new ArgumentOutOfRangeException(nameof(detailsLevel), detailsLevel, null);
             }
         }
 
-        public async Task Download(IList<Core.Domain.Chapter> chapters, DownloadOptions options)
+        public async Task Download(IList<Chapter> chapters, DownloadOptions options)
         {
             if(chapters.Count > 0)
-            {                
+            {
                 //DownloadProgress progress = new DownloadProgress(options.DownloadGuid, 0, 0, String.Format("Downloading the chapters of '{0}'", chapters.First().Manga.Name));
 
-                for(int i = 0; i < chapters.Count; i++)
+                foreach (var chapter in chapters)
                 {
-                    await DownloadChapterToFolder(chapters[i], options);
+                    await DownloadChapterToFolder(chapter, options);
                     //options.Progress.Progress++;
 
-                    ChapterQueue queue = new ChapterQueue(chapters.Count);
-                    queue.Manga = chapters.First().Manga.Name;
+                    new ChapterQueue(chapters.Count) {Manga = chapters.First().Manga.Name};
                 }
             }
         }

@@ -104,7 +104,7 @@ namespace Manga.Data
             //add parameters to command
             if(parameters != null && parameters.Length > 0)
             {
-                for(int i = 0; i < parameters.Length - 1; i++)
+                for(var i = 0; i < parameters.Length - 1; i++)
                 {
                     var p = parameters[i] as DbParameter;
                     if (p == null)
@@ -124,12 +124,12 @@ namespace Manga.Data
             var result = this.Database.SqlQuery<TEntity>(commandText, parameters).ToList();
 
             //performance hack applies as described here - http://www.nopcommerce.com/boards/t/25483/fix-very-important-speed-improvement.aspx
-            bool acd = this.Configuration.AutoDetectChangesEnabled;
+            var acd = this.Configuration.AutoDetectChangesEnabled;
             try
             {
                 this.Configuration.AutoDetectChangesEnabled = false;
 
-                for (int i = 0; i < result.Count; i++)
+                for (var i = 0; i < result.Count; i++)
                     result[i] = AttachEntityToContext(result[i]);
             }
             finally

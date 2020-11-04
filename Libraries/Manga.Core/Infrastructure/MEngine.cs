@@ -86,11 +86,11 @@ namespace Manga.Core.Infrastructure
                 string connectionString = null;
 
                 //SQL CE
-                string databaseFileName = "MangaSharp.Db.sdf";
-                string databasePath = @"|DataDirectory|\" + databaseFileName;
+                var databaseFileName = "MangaSharp.Db.sdf";
+                var databasePath = @"|DataDirectory|\" + databaseFileName;
                 connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
                 
-                string databaseFullPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseFileName);
+                var databaseFullPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseFileName);
 
                 //save settings
                 var dataProvider = "sqlce";

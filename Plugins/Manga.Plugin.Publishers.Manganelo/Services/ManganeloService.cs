@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -59,33 +58,33 @@ namespace Manga.Plugin.Publishers.Manganelo.Services
             try
             {
                 // create a web request to the manga homepage
-                HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(manga.URL);
-                using (WebResponse webRes = await webReq.GetResponseAsync()) // get web response
+                var webReq = (HttpWebRequest)WebRequest.Create(manga.URL);
+                using (var webRes = await webReq.GetResponseAsync()) // get web response
                 {
                     // open a streamreader to read response content
-                    using (System.IO.StreamReader mystream = new StreamReader(webRes.GetResponseStream()))
+                    using (var mystream = new StreamReader(webRes.GetResponseStream()))
                     {
                         // htmldocument is used for seeing html code as xml code and selecting spesific parts easily
                         // it decreases time to extract the parts we want from html
-                        HtmlDocument document = new HtmlDocument();
+                        var document = new HtmlDocument();
                         // if there is a stream load the html content
                         if (mystream != null)
                         {
                             document.Load(mystream);
                         }
 
-                        HtmlNodeCollection chapters = document.DocumentNode.SelectNodes("//div[@class='panel-story-chapter-list']//ul[@class='row-content-chapter']//li");
+                        var chapters = document.DocumentNode.SelectNodes("//div[@class='panel-story-chapter-list']//ul[@class='row-content-chapter']//li");
                         if(chapters != null)
                         {
                             IList<Manga.Core.Domain.Chapter> list = new List<Manga.Core.Domain.Chapter>(chapters.Count);
-                            for (int i = chapters.Count - 1; i >= 0; i--)
+                            for (var i = chapters.Count - 1; i >= 0; i--)
                             {
-                                Manga.Core.Domain.Chapter chapter = new Core.Domain.Chapter();
+                                var chapter = new Core.Domain.Chapter();
                                 // get the name of the chapter
-                                HtmlNode node = chapters[i];
-                                HtmlNode link = node.SelectSingleNode("a");
+                                var node = chapters[i];
+                                var link = node.SelectSingleNode("a");
                                 // get name of the chapter
-                                chapter.Name = link.InnerText.RemoveExtaSpaces();
+                                chapter.Name = link.InnerText.RemoveExtraSpaces();
                                 // get link of the chapter from nodes
                                 chapter.Url = link.Attributes["href"].Value;
                                 // set the chapter order index
@@ -114,30 +113,30 @@ namespace Manga.Plugin.Publishers.Manganelo.Services
             try
             {
                 // create a web request to the manga homepage
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(manga.URL);
-                using (WebResponse response = await request.GetResponseAsync())
+                var request = (HttpWebRequest)WebRequest.Create(manga.URL);
+                using (var response = await request.GetResponseAsync())
                 {
                     // open a streamreader to read response content
-                    using (System.IO.StreamReader reader = new StreamReader(response.GetResponseStream()))
+                    using (var reader = new StreamReader(response.GetResponseStream()))
                     {
-                        HtmlDocument document = new HtmlDocument();
+                        var document = new HtmlDocument();
                         if (reader != null)
                         {
                             document.Load(reader);
                         }
 
-                        HtmlNode info = document.DocumentNode.SelectSingleNode("//div[@class='panel-story-info']");
+                        var info = document.DocumentNode.SelectSingleNode("//div[@class='panel-story-info']");
 
-                        HtmlNode imageNode = info.SelectSingleNode("div[@class='story-info-left']/span/img");
+                        var imageNode = info.SelectSingleNode("div[@class='story-info-left']/span/img");
 
                         if (imageNode != null)
                         {
                             manga.ImageUrl = imageNode.Attributes["src"].Value;
                         }
 
-                        HtmlNode infoRight = info.SelectSingleNode("div[@class='story-info-right']");
+                        var infoRight = info.SelectSingleNode("div[@class='story-info-right']");
 
-                        HtmlNodeCollection nodes = infoRight.SelectNodes("table/tbody/tr/td[2]");
+                        var nodes = infoRight.SelectNodes("table/tbody/tr/td[2]");
                         // Alternative name
                         manga.AlternativeName = nodes[0].SelectSingleNode("h2").InnerText;
                         // Author
@@ -145,14 +144,14 @@ namespace Manga.Plugin.Publishers.Manganelo.Services
                         // Status
                         manga.Status = nodes[2].InnerText.Equals("Completed") ? 1 : 0;
                         // Genres
-                        HtmlNodeCollection genres = nodes[3].SelectNodes("a");
+                        var genres = nodes[3].SelectNodes("a");
                         manga.Genres = new List<string>(genres.Count);
-                        for (int i = 0; i < genres.Count; i++)
+                        for (var i = 0; i < genres.Count; i++)
                         {
                             manga.Genres.Add(genres[i].InnerText);
                         }
                         // Description
-                        HtmlNode description = info.SelectSingleNode("div[@class='panel-story-info-description']");
+                        var description = info.SelectSingleNode("div[@class='panel-story-info-description']");
                         if (description != null)
                         {
                             description.RemoveChild(description.SelectSingleNode("h3"));
@@ -163,24 +162,24 @@ namespace Manga.Plugin.Publishers.Manganelo.Services
                             manga.Description = null;
                         }
                         // Chapters
-                        HtmlNodeCollection chapters = document.DocumentNode.SelectNodes("//div[@class='panel-story-chapter-list']//ul[@class='row-content-chapter']//li");
+                        var chapters = document.DocumentNode.SelectNodes("//div[@class='panel-story-chapter-list']//ul[@class='row-content-chapter']//li");
                         IEqualityComparer<Manga.Core.Domain.Chapter> comparer = new Manga.Core.Domain.ChapterUrlEqualityComparer();
                         if (chapters != null)
                         {
-                            for (int i = chapters.Count - 1; i >= 0; i--)
+                            for (var i = chapters.Count - 1; i >= 0; i--)
                             {
-                                Manga.Core.Domain.Chapter chapter = new Manga.Core.Domain.Chapter();
-                                HtmlNode node = chapters[i];
-                                HtmlNode link = node.SelectSingleNode("a");
-                                chapter.Name = link.InnerText.RemoveExtaSpaces();
+                                var chapter = new Manga.Core.Domain.Chapter();
+                                var node = chapters[i];
+                                var link = node.SelectSingleNode("a");
+                                chapter.Name = link.InnerText.RemoveExtraSpaces();
                                 chapter.Url = link.Attributes["href"].Value;
                                 chapter.Index = (chapters.Count - 1) - i;
                                 chapter.MangaId = manga.Id;
                                 chapter.IsDownloaded = false;
                                 chapter.DownloadedImageCount = 0;
                                 chapter.DownloadPath = String.Empty;
-                                HtmlNode date = node.SelectSingleNode("span[contains(@class, 'chapter-time')]");
-                                string dateString = date.Attributes["title"].Value;
+                                var date = node.SelectSingleNode("span[contains(@class, 'chapter-time')]");
+                                var dateString = date.Attributes["title"].Value;
                                 chapter.Date = DateTime.Parse(dateString);
 
                                 if (manga.Chapters.Contains(chapter, comparer))
@@ -201,7 +200,7 @@ namespace Manga.Plugin.Publishers.Manganelo.Services
         protected virtual async Task DownloadChapterToFolder(Core.Domain.Chapter chapter, DownloadOptions options/*, ChapterQueue queue*/)
         {
             // Create directory path
-            string dir = string.Format("{0}\\{1}\\{2}", options.Path,
+            var dir = string.Format("{0}\\{1}\\{2}", options.Path,
                     chapter.Manga.Name.Trim().RemoveIllegalCharacters(),
                     chapter.Name.Trim().RemoveIllegalCharacters());
             System.IO.Directory.CreateDirectory(dir);
@@ -210,18 +209,18 @@ namespace Manga.Plugin.Publishers.Manganelo.Services
         protected async Task<int> FetchListPageCount()
         {
             int result;
-            string link = String.Format(GETLIST_URL, 1);
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(link);
-            using (WebResponse response = await request.GetResponseAsync())
+            var link = String.Format(GETLIST_URL, 1);
+            var request = (HttpWebRequest)WebRequest.Create(link);
+            using (var response = await request.GetResponseAsync())
             {
-                using (System.IO.StreamReader reader = new System.IO.StreamReader(response.GetResponseStream()))
+                using (var reader = new System.IO.StreamReader(response.GetResponseStream()))
                 {
-                    HtmlDocument document = new HtmlDocument();
+                    var document = new HtmlDocument();
                     if (reader != null)
                     {
                         document.Load(reader);
                     }
-                    HtmlNode node = document.DocumentNode.SelectSingleNode("//div[@class='panel-page-number']/div[@class='group-page']/a[@class='page-blue page-last']");
+                    var node = document.DocumentNode.SelectSingleNode("//div[@class='panel-page-number']/div[@class='group-page']/a[@class='page-blue page-last']");
                     result = int.Parse(_regex.Match(node.InnerText).Value);
                     reader.Close();
                 }
@@ -238,7 +237,7 @@ namespace Manga.Plugin.Publishers.Manganelo.Services
         {
             Console.Write("Manganelo GetList");
             var publisher = _publisherService.GetPublisherByName("Manganelo");
-            IList<Manga.Core.Domain.Manga> list = _mangaService.GetAllManga(publisher.Id);
+            var list = _mangaService.GetAllManga(publisher.Id);
             return list;
         }
 
@@ -253,14 +252,14 @@ namespace Manga.Plugin.Publishers.Manganelo.Services
             WebRequest request = null;
             WebResponse response = null;
 
-            int current = 1;
-            int total = await FetchListPageCount();
+            var current = 1;
+            var total = await FetchListPageCount();
 
-            String link = String.Format(GETLIST_URL, current);
+            var link = String.Format(GETLIST_URL, current);
 
             try
             {
-                DateTime start = DateTime.Now;
+                var start = DateTime.Now;
                 do
                 {
                     request = WebRequest.Create(link);
@@ -283,7 +282,7 @@ namespace Manga.Plugin.Publishers.Manganelo.Services
                             ms.Seek(0, SeekOrigin.Begin);
                             // htmldocument is used for seeing html code as xml code and selecting spesific parts easily
                             // it decreases time to extract the parts we want from html
-                            HtmlDocument document = new HtmlDocument();
+                            var document = new HtmlDocument();
                             // if there is a stream load the html content
                             start = DateTime.Now;
                             if (ms != null)
@@ -291,21 +290,21 @@ namespace Manga.Plugin.Publishers.Manganelo.Services
                                 document.Load(ms);
                             }
                             Console.WriteLine("Loading HtmlDocument took {0} ms", (DateTime.Now - start).TotalMilliseconds);
-                            HtmlNodeCollection nodes = document.DocumentNode.SelectNodes("//div[@class='panel-content-genres']/div[@class='content-genres-item']");
-                            DateTime now = DateTime.Now;
+                            var nodes = document.DocumentNode.SelectNodes("//div[@class='panel-content-genres']/div[@class='content-genres-item']");
+                            var now = DateTime.Now;
 
                             // for each nodes in collection create a manga and fill the manga information and add it to the array
-                            for (int i = 0; i < nodes.Count; i++)
+                            for (var i = 0; i < nodes.Count; i++)
                             {
-                                HtmlNode linkNode = nodes[i].SelectSingleNode("a[@class='genres-item-img']");
-                                HtmlNode imageNode = linkNode.SelectSingleNode("img");
-                                HtmlNode infoNode = nodes[i].SelectSingleNode("div[@class='genres-item-info']");
-                                HtmlNode nameNode = infoNode.SelectSingleNode("h3/a[contains(@class, 'genres-item-name')]");
+                                var linkNode = nodes[i].SelectSingleNode("a[@class='genres-item-img']");
+                                var imageNode = linkNode.SelectSingleNode("img");
+                                var infoNode = nodes[i].SelectSingleNode("div[@class='genres-item-info']");
+                                var nameNode = infoNode.SelectSingleNode("h3/a[contains(@class, 'genres-item-name')]");
 
 
                                 var manga = new Manga.Core.Domain.Manga()
                                 {
-                                    Name = nameNode.InnerText.RemoveExtaSpaces(),
+                                    Name = nameNode.InnerText.RemoveExtraSpaces(),
                                     URL = linkNode.Attributes["href"].Value,
                                     PublisherId = publisher.Id,
                                     Year = 0,
@@ -314,7 +313,7 @@ namespace Manga.Plugin.Publishers.Manganelo.Services
                                     LastUpdatedDate = now,
                                     Size = 0,
                                     IsFavourite = false,
-                                    Author = infoNode.SelectSingleNode("//span[@class='genres-item-author']").InnerText.RemoveExtaSpaces(),
+                                    Author = infoNode.SelectSingleNode("//span[@class='genres-item-author']").InnerText.RemoveExtraSpaces(),
                                     Description = infoNode.SelectSingleNode("//div[@class='genres-item-description']").InnerText,
                                     ImageUrl = imageNode.Attributes["src"].Value,
                                 };
@@ -371,10 +370,10 @@ namespace Manga.Plugin.Publishers.Manganelo.Services
         {
             if(chapters.Count > 0)
             {
-                for (int i = 0; i < chapters.Count; i++)
+                for (var i = 0; i < chapters.Count; i++)
                 {
                     await DownloadChapterToFolder(chapters[i], options);
-                    ChapterQueue queue = new ChapterQueue(chapters.Count);
+                    var queue = new ChapterQueue(chapters.Count);
                     queue.Manga = chapters.First().Manga.Name;
                 }
             }

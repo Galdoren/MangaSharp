@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.ModelConfiguration;
+﻿using System.Data.Entity.ModelConfiguration;
 using System.Data.Entity.Infrastructure.Annotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity.Migrations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Manga.Data.Mapping
