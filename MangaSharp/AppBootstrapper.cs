@@ -155,7 +155,7 @@ namespace MangaSharp
 
         protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            Container.Resolve<ILogger>().Log(e.Exception.ToString(), LogLevel.Error);
+            Container.Resolve<ILogger>().Error(e.Exception.ToString());
         }
     }
 }
